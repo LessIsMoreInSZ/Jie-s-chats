@@ -28,3 +28,42 @@ const nextConfig = {
 };
 
 module.exports = withPWA(nextConfig);
+
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://localhost:5146/api/:path*',
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        // 匹配所有路径
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ];
+  },
+  async serverMiddleware() {
+    return [
+      {
+        path: '/api',
+        handler: createProxyMiddleware({
+          target: 'http://localhost:5146',
+          changeOrigin: true,
+          pathRewrite: { '^/api': '' },
+        }),
+      },
+    ];
+  },
+};

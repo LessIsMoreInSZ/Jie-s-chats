@@ -61,3 +61,4 @@ logs.txt
 /src/BE/AppData/*
 /eng/ReleaseWebhook/bin
 /eng/ReleaseWebhook/obj
+/src/FE/.husky/**
